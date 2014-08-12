@@ -1,8 +1,26 @@
 <resources>
 
+    <color name="AppAccentColor">#4cd964</color>
+    <color name="AppAccentColorDark">#7cb342</color>
+    <color name="AppForegroundColor">#222</color>
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/AppActionBar</item>
+    </style>
+
+    <style name="AppActionBar" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">@color/AppAccentColor</item>
+        <item name="android:titleTextStyle">@style/AppActionBarText</item>
+    </style>
+    
+    <style name="AppActionBarText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/AppForegroundColor</item>
+    </style>
+
+    <style name="PromptText">
+        <item name="android:textColor">@color/AppForegroundColor</item>
+        <item name="android:textSize">@dimen/prompt_text_size</item>
     </style>
 
 </resources>
