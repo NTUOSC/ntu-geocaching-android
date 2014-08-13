@@ -14,6 +14,8 @@ public class MainActivity
         extends Activity
         implements EndpointConfigFragment.OnEndpointChangedListener {
 
+    public static final String PREFERENCES_NAME = "NTUOSC_Geo";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,28 +37,33 @@ public class MainActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_edit) {
+        if (id == R.id.action_edit)
+            return onEditEndpointMenuItemClicked();
 
-            DialogFragment fragment = new EndpointConfigFragment();
-            fragment.show(getFragmentManager(), "endpointConfig");
-
-        }
-        else if (id == R.id.action_about) {
-
-            // Launch NTUOSC site
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ntuosc.org"));
-
-            try {
-                startActivity(intent);
-            }
-            catch (ActivityNotFoundException ex) {
-                // Ignore it
-            }
-
-            return true;
-        }
+        else if (id == R.id.action_about)
+            return onAboutMenuItemClicked();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onEditEndpointMenuItemClicked() {
+        DialogFragment fragment = new EndpointConfigFragment();
+        fragment.show(getFragmentManager(), "endpointConfig");
+
+        return true;
+    }
+
+    public boolean onAboutMenuItemClicked() {
+        // Launch NTUOSC site
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ntuosc.org"));
+        try {
+            startActivity(intent);
+            return true;
+        }
+        catch (ActivityNotFoundException ex) {
+            // No browser found. Just ignore it and all is good.
+            return false;
+        }
     }
 
     @Override

@@ -11,10 +11,10 @@
 
     <style name="AppActionBar" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@color/AppAccentColor</item>
-        <item name="android:titleTextStyle">@style/AppActionBarText</item>
+        <item name="android:titleTextStyle">@style/AppActionBar.Text</item>
     </style>
     
-    <style name="AppActionBarText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="AppActionBar.Text" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/AppForegroundColor</item>
     </style>
 
@@ -24,10 +24,17 @@
     </style>
 
     <style name="DialogField" parent="android:TextAppearance.Holo.Small">
-        <item name="android:paddingTop">@dimen/dialog_padding</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/AppAccentColorDark</item>
+    </style>
+
+    <style name="DialogField.EditText">
+        <item name="android:layout_marginBottom">@dimen/dialog_field_margin</item>
+    </style>
+
+    <style name="DialogField.AdditionalInfo" parent="android:TextAppearance.Holo.Medium">
+        <item name="android:layout_marginBottom">@dimen/dialog_padding</item>
     </style>
 
 </resources>
