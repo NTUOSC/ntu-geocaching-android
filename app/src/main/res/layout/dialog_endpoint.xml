@@ -10,6 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/endpoint_field"
-        android:hint="@string/hint_endpoint" />
+        android:inputType="textVisiblePassword"
+        android:hint="@string/hint_endpoint_name" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/field_endpoint_key"
+        android:inputType="textPassword"
+        android:hint="@string/hint_endpoint_key" />
 
 </LinearLayout>

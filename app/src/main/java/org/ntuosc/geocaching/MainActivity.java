@@ -1,6 +1,7 @@
 package org.ntuosc.geocaching;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,7 +33,13 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_about) {
+        if (id == R.id.action_edit) {
+
+            DialogFragment fragment = new EndpointConfigFragment();
+            fragment.show(getFragmentManager(), "endpointConfig");
+
+        }
+        else if (id == R.id.action_about) {
 
             // Launch NTUOSC site
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ntuosc.org"));
