@@ -4,15 +4,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 
 public class EndpointConfigFragment extends DialogFragment {
-
-    private OnEndpointChangedListener mListener;
 
     public EndpointConfigFragment() {
         // Required empty public constructor
@@ -32,57 +34,82 @@ public class EndpointConfigFragment extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
-                        AlertDialog dialog = (AlertDialog) dialogInterface;
-
-                        String name = ((EditText) dialog.findViewById(R.id.field_endpoint_name))
-                                      .getText().toString();
-
-                        String key = ((EditText) dialog.findViewById(R.id.field_endpoint_key))
-                                     .getText().toString();
-
-                        if (mListener != null)
-                            mListener.onEndpointChanged(name, key);
-
+                        onDialogAccepted(dialogInterface, i);
                     }
+
                 })
-                .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Cancelled
-                    }
-                });
+                .setNegativeButton(R.string.action_cancel, null);
 
-        return builder.create();
+        AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                onDialogShow(dialogInterface);
+            }
+        });
+
+        return dialog;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnEndpointChangedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnEndpointChangedListener");
-        }
+    protected void onDialogShow(DialogInterface dialogInterface) {
+
+        final AlertDialog dialog = (AlertDialog) dialogInterface;
+
+        TextWatcher watcher = new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                updateDialogButton(dialog);
+            }
+
+        };
+
+        ((EditText) dialog.findViewById(R.id.field_endpoint_name))
+                .addTextChangedListener(watcher);
+
+        ((EditText) dialog.findViewById(R.id.field_endpoint_key))
+                .addTextChangedListener(watcher);
+
+        updateDialogButton(dialogInterface);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    protected void updateDialogButton(DialogInterface dialogInterface) {
+
+        AlertDialog dialog = (AlertDialog) dialogInterface;
+
+        EditText nameField = ((EditText) dialog.findViewById(R.id.field_endpoint_name));
+
+        EditText keyField = ((EditText) dialog.findViewById(R.id.field_endpoint_key));
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setEnabled(nameField.length() > 0 && keyField.length() > 0);
+
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     */
-    public interface OnEndpointChangedListener {
+    protected void onDialogAccepted(DialogInterface dialogInterface, int i) {
 
-        public void onEndpointChanged(String endpointName, String endpointKey);
+        AlertDialog dialog = (AlertDialog) dialogInterface;
 
+        String name = ((EditText) dialog.findViewById(R.id.field_endpoint_name))
+                .getText().toString();
+
+        String key = ((EditText) dialog.findViewById(R.id.field_endpoint_key))
+                .getText().toString();
+
+        SharedPreferences preferences = getActivity()
+                .getSharedPreferences(AppConfig.PREF_NAME, Context.MODE_PRIVATE);
+
+        preferences.edit()
+                .putString(AppConfig.PREF_ENDPOINT_NAME, name)
+                .putString(AppConfig.PREF_ENDPOINT_KEY, key)
+                .commit();
     }
 
 }

@@ -11,10 +11,7 @@ import android.view.MenuItem;
 
 
 public class MainActivity
-        extends Activity
-        implements EndpointConfigFragment.OnEndpointChangedListener {
-
-    public static final String PREFERENCES_NAME = "NTUOSC_Geo";
+        extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +63,4 @@ public class MainActivity
         }
     }
 
-    @Override
-    public void onEndpointChanged(String endpointName, String endpointKey) {
-        // Endpoint changed!
-    }
 }

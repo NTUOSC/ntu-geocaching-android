@@ -10,32 +10,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/prompt_enter_endpoint"
-        style="@style/DialogField.AdditionalInfo" />
+        style="@style/DialogPrompt" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hint_endpoint_name"
-        style="@style/DialogField" />
+        style="@style/DialogFieldLabel" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/field_endpoint_name"
         android:inputType="textVisiblePassword"
-        style="@style/DialogField.EditText" />
+        style="@style/DialogField" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hint_endpoint_key"
-        style="@style/DialogField" />
+        style="@style/DialogFieldLabel" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/field_endpoint_key"
         android:inputType="textPassword"
-        style="@style/DialogField.EditText" />
+        style="@style/DialogField" />
 
 </LinearLayout>
