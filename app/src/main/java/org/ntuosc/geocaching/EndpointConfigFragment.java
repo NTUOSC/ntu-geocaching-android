@@ -4,66 +4,54 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.EditText;
 
-
-/**
- * A simple {@link DialogFragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EndpointConfigFragment.OnEndpointChangedListener} interface
- * to handle interaction events.
- * Use the {@link EndpointConfigFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class EndpointConfigFragment extends DialogFragment {
-    // TODO: Rename parameter arguments, choose names that match
 
     private OnEndpointChangedListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment EndpointConfigFragment.
-     */
-    public static EndpointConfigFragment newInstance() {
-        EndpointConfigFragment fragment = new EndpointConfigFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public EndpointConfigFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // Read arguments using getArguments()
-        }
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // TODO: Build up dialog layout
-        return builder.create();
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onEndpointChanged(uri);
-        }
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        builder.setTitle(R.string.title_enter_endpoint)
+
+                .setView(inflater.inflate(R.layout.dialog_endpoint, null))
+
+                .setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        AlertDialog dialog = (AlertDialog) dialogInterface;
+
+                        String endpointName = ((EditText) dialog.findViewById(R.id.endpoint_field))
+                                              .getText().toString();
+
+                        if (mListener != null)
+                            mListener.onEndpointChanged(endpointName);
+
+                    }
+                })
+                .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (mListener != null)
+                            mListener.onCancelled();
+                    }
+                });
+
+        return builder.create();
     }
 
     @Override
