@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,12 +14,25 @@ import android.view.MenuItem;
 public class MainActivity
         extends Activity {
 
+    public static final String ENDPOINT_CONFIG = "endpointConfig";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
+        // Load preferences
+        SharedPreferences preferences = getSharedPreferences(AppConfig.PREF_NAME, MODE_PRIVATE);
+        if (!preferences.contains(AppConfig.PREF_ENDPOINT_NAME)) {
+            DialogFragment fragment = new EndpointConfigFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(EndpointConfigFragment.CLOSE_ON_CANCEL, true);
+
+            fragment.setArguments(bundle);
+            fragment.show(getFragmentManager(), ENDPOINT_CONFIG);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -45,7 +59,7 @@ public class MainActivity
 
     public boolean onEditEndpointMenuItemClicked() {
         DialogFragment fragment = new EndpointConfigFragment();
-        fragment.show(getFragmentManager(), "endpointConfig");
+        fragment.show(getFragmentManager(), ENDPOINT_CONFIG);
 
         return true;
     }

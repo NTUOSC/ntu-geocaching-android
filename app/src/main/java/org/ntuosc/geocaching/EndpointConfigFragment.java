@@ -16,6 +16,8 @@ import android.widget.EditText;
 
 public class EndpointConfigFragment extends DialogFragment {
 
+    public static final String CLOSE_ON_CANCEL = "closeOnCancel";
+
     public EndpointConfigFragment() {
         // Required empty public constructor
     }
@@ -34,7 +36,7 @@ public class EndpointConfigFragment extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        onDialogAccepted(dialogInterface, i);
+                        onDialogAccepted(dialogInterface);
                     }
 
                 })
@@ -49,6 +51,13 @@ public class EndpointConfigFragment extends DialogFragment {
             }
         });
 
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                onDialogCancelled(dialogInterface);
+            }
+        });
+
         return dialog;
     }
 
@@ -56,6 +65,19 @@ public class EndpointConfigFragment extends DialogFragment {
 
         final AlertDialog dialog = (AlertDialog) dialogInterface;
 
+        // Read preferences
+        SharedPreferences preferences = getActivity()
+                .getSharedPreferences(AppConfig.PREF_NAME, Context.MODE_PRIVATE);
+
+        // Acquire view references
+        EditText nameField = (EditText) dialog.findViewById(R.id.field_endpoint_name);
+        EditText keyField = (EditText) dialog.findViewById(R.id.field_endpoint_key);
+
+        // Load preferences to view
+        nameField.setText(preferences.getString(AppConfig.PREF_ENDPOINT_NAME, ""));
+        keyField.setText(preferences.getString(AppConfig.PREF_ENDPOINT_KEY, ""));
+
+        // Set listener
         TextWatcher watcher = new TextWatcher() {
 
             @Override
@@ -70,12 +92,8 @@ public class EndpointConfigFragment extends DialogFragment {
             }
 
         };
-
-        ((EditText) dialog.findViewById(R.id.field_endpoint_name))
-                .addTextChangedListener(watcher);
-
-        ((EditText) dialog.findViewById(R.id.field_endpoint_key))
-                .addTextChangedListener(watcher);
+        nameField.addTextChangedListener(watcher);
+        keyField.addTextChangedListener(watcher);
 
         updateDialogButton(dialogInterface);
     }
@@ -93,7 +111,7 @@ public class EndpointConfigFragment extends DialogFragment {
 
     }
 
-    protected void onDialogAccepted(DialogInterface dialogInterface, int i) {
+    protected void onDialogAccepted(DialogInterface dialogInterface) {
 
         AlertDialog dialog = (AlertDialog) dialogInterface;
 
@@ -110,6 +128,12 @@ public class EndpointConfigFragment extends DialogFragment {
                 .putString(AppConfig.PREF_ENDPOINT_NAME, name)
                 .putString(AppConfig.PREF_ENDPOINT_KEY, key)
                 .commit();
+    }
+
+    protected void onDialogCancelled(DialogInterface dialogInterface) {
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.getBoolean(CLOSE_ON_CANCEL, false))
+            getActivity().finish();
     }
 
 }
