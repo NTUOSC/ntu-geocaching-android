@@ -11,8 +11,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+
+import static android.content.Context.*;
+import static org.ntuosc.geocaching.AppConfig.*;
 
 public class EndpointConfigFragment extends DialogFragment {
 
@@ -40,7 +44,12 @@ public class EndpointConfigFragment extends DialogFragment {
                     }
 
                 })
-                .setNegativeButton(R.string.action_cancel, null);
+                .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
 
         AlertDialog dialog = builder.create();
 
@@ -48,13 +57,6 @@ public class EndpointConfigFragment extends DialogFragment {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 onDialogShow(dialogInterface);
-            }
-        });
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                onDialogCancelled(dialogInterface);
             }
         });
 
@@ -67,15 +69,15 @@ public class EndpointConfigFragment extends DialogFragment {
 
         // Read preferences
         SharedPreferences preferences = getActivity()
-                .getSharedPreferences(AppConfig.PREF_NAME, Context.MODE_PRIVATE);
+                .getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
         // Acquire view references
         EditText nameField = (EditText) dialog.findViewById(R.id.field_endpoint_name);
         EditText keyField = (EditText) dialog.findViewById(R.id.field_endpoint_key);
 
         // Load preferences to view
-        nameField.setText(preferences.getString(AppConfig.PREF_ENDPOINT_NAME, ""));
-        keyField.setText(preferences.getString(AppConfig.PREF_ENDPOINT_KEY, ""));
+        nameField.setText(preferences.getString(PREF_ENDPOINT_NAME, ""));
+        keyField.setText(preferences.getString(PREF_ENDPOINT_KEY, ""));
 
         // Set listener
         TextWatcher watcher = new TextWatcher() {
@@ -122,18 +124,23 @@ public class EndpointConfigFragment extends DialogFragment {
                 .getText().toString();
 
         SharedPreferences preferences = getActivity()
-                .getSharedPreferences(AppConfig.PREF_NAME, Context.MODE_PRIVATE);
+                .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
         preferences.edit()
-                .putString(AppConfig.PREF_ENDPOINT_NAME, name)
-                .putString(AppConfig.PREF_ENDPOINT_KEY, key)
+                .putString(PREF_ENDPOINT_NAME, name)
+                .putString(PREF_ENDPOINT_KEY, key)
                 .commit();
     }
 
-    protected void onDialogCancelled(DialogInterface dialogInterface) {
+    @Override
+    public void onCancel(DialogInterface dialogInterface) {
         Bundle bundle = getArguments();
-        if (bundle != null && bundle.getBoolean(CLOSE_ON_CANCEL, false))
+
+        if (bundle != null && bundle.getBoolean(CLOSE_ON_CANCEL, false)) {
             getActivity().finish();
+        }
+
+        super.onCancel(dialogInterface);
     }
 
 }
