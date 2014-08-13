@@ -6,18 +6,34 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/dialog_padding">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/prompt_enter_endpoint"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_endpoint_name"
+        style="@style/DialogField" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/endpoint_field"
-        android:inputType="textVisiblePassword"
-        android:hint="@string/hint_endpoint_name" />
+        android:id="@+id/field_endpoint_name"
+        android:inputType="textVisiblePassword" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_endpoint_key"
+        style="@style/DialogField" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/field_endpoint_key"
-        android:inputType="textPassword"
-        android:hint="@string/hint_endpoint_key" />
+        android:inputType="textPassword" />
 
 </LinearLayout>

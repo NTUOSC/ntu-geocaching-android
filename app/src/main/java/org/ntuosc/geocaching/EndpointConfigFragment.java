@@ -35,19 +35,21 @@ public class EndpointConfigFragment extends DialogFragment {
 
                         AlertDialog dialog = (AlertDialog) dialogInterface;
 
-                        String endpointName = ((EditText) dialog.findViewById(R.id.endpoint_field))
-                                              .getText().toString();
+                        String name = ((EditText) dialog.findViewById(R.id.field_endpoint_name))
+                                      .getText().toString();
+
+                        String key = ((EditText) dialog.findViewById(R.id.field_endpoint_key))
+                                     .getText().toString();
 
                         if (mListener != null)
-                            mListener.onEndpointChanged(endpointName);
+                            mListener.onEndpointChanged(name, key);
 
                     }
                 })
                 .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (mListener != null)
-                            mListener.onCancelled();
+                        // Cancelled
                     }
                 });
 
@@ -79,9 +81,7 @@ public class EndpointConfigFragment extends DialogFragment {
      */
     public interface OnEndpointChangedListener {
 
-        public void onEndpointChanged(String endpointName);
-
-        public void onCancelled();
+        public void onEndpointChanged(String endpointName, String endpointKey);
 
     }
 
