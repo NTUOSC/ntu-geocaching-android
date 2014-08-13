@@ -12,4 +12,6 @@ public final class AppConfig {
 
     public static final String PREF_ENDPOINT_KEY = "endpointKey";
 
+    public static final int CODE_NFC_REQUEST = 200;
+
 }

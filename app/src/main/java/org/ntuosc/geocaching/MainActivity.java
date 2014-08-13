@@ -2,10 +2,14 @@ package org.ntuosc.geocaching;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +36,9 @@ public class MainActivity
             fragment.setArguments(bundle);
             fragment.show(getFragmentManager(), ENDPOINT_CONFIG);
         }
+
+        // Start detecting tag
+        enableNfcDispatch();
     }
 
     @Override
@@ -39,6 +46,18 @@ public class MainActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        disableNfcDispatch();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        enableNfcDispatch();
     }
 
     @Override
@@ -77,4 +96,27 @@ public class MainActivity
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        if (tag != null) {
+            // Tag discovered!
+        }
+
+        super.onNewIntent(intent);
+    }
+
+    public void enableNfcDispatch() {
+        NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
+
+        PendingIntent nfcIntent = PendingIntent.getActivity(this, AppConfig.CODE_NFC_REQUEST,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
+        nfc.enableForegroundDispatch(this, nfcIntent, null, null);
+    }
+
+    public void disableNfcDispatch() {
+        NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
+        nfc.disableForegroundDispatch(this);
+    }
 }
