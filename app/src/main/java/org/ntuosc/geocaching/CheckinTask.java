@@ -6,21 +6,31 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
+import javax.net.ssl.HttpsURLConnection;
+
+import static java.net.HttpURLConnection.*;
 import static org.ntuosc.geocaching.AppConfig.*;
 
 public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
@@ -49,50 +59,89 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
         for (Tag tag : tags) {
 
             // Build up arguments
-            ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-            String uid = byteToHexString(tag.getId());
+            HashMap<String, String> params = new HashMap<String, String>();
+            String uid = Util.toHexString(tag.getId());
 
-            params.add(new BasicNameValuePair("auth", mEndpointKey));
-            params.add(new BasicNameValuePair("cuid", uid));
+            params.put("auth", mEndpointKey);
+            params.put("cuid", uid);
 
-            // Create client and build up URL
-            HttpClient client = new DefaultHttpClient();
-            HttpPost request;
+            // Build up URL
+
+            URL url;
 
             try {
-                request = new HttpPost(String.format(Locale.getDefault(), URL_ENDPOINT, mEndpointName));
-                request.setEntity(new UrlEncodedFormEntity(params));
+                url = new URL(String.format(Locale.getDefault(), URL_ENDPOINT, mEndpointName));
             }
-            catch (IllegalArgumentException ex) {
+            catch (MalformedURLException ex) {
                 Log.e(PACKAGE_NAME, "URL formatting failed", ex);
                 return CODE_ENDPOINT_INCORRECT;
             }
-            catch (UnsupportedEncodingException ex) {
-                Log.e(PACKAGE_NAME, "Default encoding not supported? How come?", ex);
-                return CODE_GENERIC_ERROR;
-            }
+
+            // Send request
 
             try {
-                HttpResponse response = client.execute(request);
-                HttpEntity entity = response.getEntity();
-                Log.v(PACKAGE_NAME, "Checkin success");
+                HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
+
+                request.setUseCaches(false);
+                request.setRequestMethod("POST");
+                request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                request.setDoInput(true);
+                request.setDoOutput(true);
+                request.setChunkedStreamingMode(0);
+
+                OutputStream output = request.getOutputStream();
+                Writer writer = new BufferedWriter(new OutputStreamWriter(output, DEFAULT_ENCODING));
+                writer.write(Util.toQueryString(params));
+                writer.flush();
+                writer.close();
+                output.close();
+
+                try {
+                    String response = Util.readToEnd(request.getInputStream());
+
+                    // Theoretically need to parse JSON but gonna ignore the result here
+                    // since we're not distinguishing "ok" and "notice: came before"
+                    // JSONObject entity = new JSONObject(entity);
+                }
+                catch (IOException ex) {
+                    Log.e(PACKAGE_NAME, String.format(Locale.getDefault(),
+                            "Server responded with HTTP Error %d", request.getResponseCode()), ex);
+                    try {
+                        String errorResponse = Util.readToEnd(request.getErrorStream());
+                        JSONObject entity = new JSONObject(errorResponse);
+
+                        Log.v(PACKAGE_NAME, String.format(Locale.getDefault(),
+                                "Error message: %s", entity.getString("message")));
+
+                        if (request.getResponseCode() == HTTP_BAD_REQUEST)
+                            return CODE_ENDPOINT_INCORRECT;
+                        else if (request.getResponseCode() == HTTP_INTERNAL_ERROR)
+                            return CODE_GENERIC_ERROR;
+                        else
+                            return CODE_NETWORK_ERROR;
+
+                    }
+                    catch (JSONException inner) {
+                        if (request.getResponseCode() == HTTP_INTERNAL_ERROR)
+                            return CODE_GENERIC_ERROR;
+                        else
+                            return CODE_NETWORK_ERROR;
+                    }
+                    catch (IOException inner) {
+                        Log.e(PACKAGE_NAME, "Failed to parse error response", inner);
+                        return CODE_NETWORK_ERROR;
+                    }
+                }
+                finally {
+                    request.disconnect();
+                }
             }
             catch (IOException ex) {
                 Log.e(PACKAGE_NAME, "Error occurred while requesting checkin", ex);
+                return CODE_NETWORK_ERROR;
             }
-
         }
-    }
 
-    private static final char[] hexNumbers = "0123456789abcdef".toCharArray();
-
-    public static String byteToHexString(byte[] bytes) {
-        char[] result = new char[bytes.length * 2];
-        for (int i = 0; i < bytes.length; i++) {
-            int value = bytes[i] & 0xff;
-            result[i * 2] = hexNumbers[value >> 4];
-            result[i * 2 + 1] = hexNumbers[value & 0x0f];
-        }
-        return new String(result);
+        return CODE_SUCCESS;
     }
 }

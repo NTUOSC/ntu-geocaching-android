@@ -26,4 +26,6 @@ public final class AppConfig {
 
     public static final int CODE_NETWORK_ERROR = 502;
 
+    public static final String DEFAULT_ENCODING = "UTF-8";
+
 }
