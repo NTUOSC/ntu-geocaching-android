@@ -135,4 +135,17 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
 
         return CODE_SUCCESS;
     }
+
+    @Override
+    protected void onPostExecute(Integer code) {
+        // NOTE: This approach might leak memory as stated in
+        // http://simonvt.net/2014/04/17/asynctask-is-bad-and-you-should-feel-bad/
+        // But since it's getting late, whatever (flee)
+        if (mActivity != null) {
+            mActivity.onPostCheckin(code);
+
+            // Release reference
+            mActivity = null;
+        }
+    }
 }

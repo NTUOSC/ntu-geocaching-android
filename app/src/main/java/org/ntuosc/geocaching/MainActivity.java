@@ -12,6 +12,9 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.Locale;
 
 
 public class MainActivity
@@ -99,7 +102,14 @@ public class MainActivity
     protected void onNewIntent(Intent intent) {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (tag != null) {
-            // Tag detected!
+            // Show tag information
+            Toast.makeText(this, String.format(Locale.getDefault(),
+                    getString(R.string.prompt_tag_id), Util.toHexString(tag.getId())),
+                    Toast.LENGTH_SHORT).show();
+
+            // Check in!
+            CheckinTask task = new CheckinTask(this);
+            task.execute(tag);
         }
 
         super.onNewIntent(intent);
@@ -117,5 +127,18 @@ public class MainActivity
     public void disableNfcDispatch() {
         NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
         nfc.disableForegroundDispatch(this);
+    }
+
+    public void onPostCheckin(Integer code) {
+        switch (code) {
+            case AppConfig.CODE_SUCCESS:
+                break;
+            case AppConfig.CODE_ENDPOINT_INCORRECT:
+                break;
+            case AppConfig.CODE_NETWORK_ERROR:
+                break;
+            case AppConfig.CODE_GENERIC_ERROR:
+                break;
+        }
     }
 }

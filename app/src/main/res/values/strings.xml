@@ -17,10 +17,20 @@
     <string name="hint_endpoint_name">名稱</string>
     <string name="hint_endpoint_key">驗證碼</string>
 
+    <string name="prompt_tag_id">卡片編號：%s</string>
+
     <string name="title_checkin_done">打卡成功！</string>
-    <string name="prompt_checkin_done">解開大地計劃的成就還能兌換獎品哦！如果希望留下聯絡資訊給這個社團，請選[留下資料]。</string>
-    <string name="hint_tag_id">卡片編號</string>
-    <string name="action_register">留下資料</string>
+    <string name="prompt_checkin_done">解開大地計劃的成就還能兌換獎品，請繼續加油哦。(・ω・)ノ</string>
     <string name="action_done">完成</string>
+
+    <string name="title_endpoint_incorrect">端點設定不正確</string>
+    <string name="prompt_endpoint_incorrect">可能是打錯字了？我們需要檢查一下之前輸入的連線資訊。</string>
+    <string name="action_continue">繼續</string>
+
+    <string name="title_network_error">無法連線</string>
+    <string name="prompt_network_error">唔，網路好像有點問題？請再重試一次。</string>
+
+    <string name="title_generic_error">打卡失敗</string>
+    <string name="prompt_generic_error">啊呀，伺服器好像離家出走了？請直接到開源社的攤位補登打卡點吧。</string>
 
 </resources>
