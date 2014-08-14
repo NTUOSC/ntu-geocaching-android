@@ -18,7 +18,8 @@ import java.util.Locale;
 
 
 public class MainActivity
-        extends Activity {
+        extends Activity
+        implements ErrorFragment.Listener {
 
     public static final String ENDPOINT_CONFIG = "endpointConfig";
 
@@ -130,17 +131,50 @@ public class MainActivity
     }
 
     public void onPostCheckin(Integer code) {
+        DialogFragment fragment;
+
         switch (code) {
             case AppConfig.CODE_SUCCESS:
-                DialogFragment fragment = new CheckinDoneFragment();
+                fragment = new CheckinDoneFragment();
                 fragment.show(getFragmentManager(), "checkin");
                 break;
+
             case AppConfig.CODE_ENDPOINT_INCORRECT:
+                fragment = ErrorFragment.newInstance(
+                        getString(R.string.title_endpoint_incorrect),
+                        getString(R.string.prompt_endpoint_incorrect),
+                        getString(R.string.action_continue),
+                        AppConfig.CODE_ENDPOINT_INCORRECT
+                );
+                fragment.show(getFragmentManager(), "error");
                 break;
+
             case AppConfig.CODE_NETWORK_ERROR:
+                fragment = ErrorFragment.newInstance(
+                        getString(R.string.title_network_error),
+                        getString(R.string.prompt_network_error),
+                        getString(R.string.action_ok),
+                        0);
+                fragment.show(getFragmentManager(), "error");
                 break;
+
             case AppConfig.CODE_GENERIC_ERROR:
+                fragment = ErrorFragment.newInstance(
+                        getString(R.string.title_generic_error),
+                        getString(R.string.prompt_generic_error),
+                        getString(R.string.action_ok),
+                        0);
+                fragment.show(getFragmentManager(), "error");
                 break;
+        }
+    }
+
+    @Override
+    public void onErrorDialogDismiss(int errorCode) {
+        if (errorCode == AppConfig.CODE_ENDPOINT_INCORRECT) {
+            // Open endpoint config dialog for user
+            DialogFragment fragment = new EndpointConfigFragment();
+            fragment.show(getFragmentManager(), ENDPOINT_CONFIG);
         }
     }
 }
