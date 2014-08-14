@@ -9,6 +9,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -106,6 +107,10 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
                         Log.v(PACKAGE_NAME, String.format(Locale.getDefault(),
                                 "HTTP %d: %s",
                                 request.getResponseCode(), request.getResponseMessage()));
+
+                        // Handle special cases
+                        if (ex instanceof FileNotFoundException)
+                            return CODE_ENDPOINT_INCORRECT;
 
                         // Try parse and read server response
                         String response = Util.readToEnd(request.getErrorStream());
