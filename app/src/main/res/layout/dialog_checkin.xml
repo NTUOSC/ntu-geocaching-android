@@ -6,16 +6,25 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/dialog_padding">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/dialog_field_margin"
+        android:src="@drawable/clipart_ok" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hint_tag_id"
-        style="@style/DialogFieldLabel" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/dialog_field_margin"
+        android:text="@string/title_checkin_done"
+        style="@style/DialogTitle" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/field_tag_id"
+        android:text="@string/prompt_checkin_done"
         style="@style/DialogPrompt" />
 
 </LinearLayout>

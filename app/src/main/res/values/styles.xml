@@ -23,6 +23,11 @@
         <item name="android:textSize">@dimen/prompt_text_size</item>
     </style>
 
+    <style name="DialogTitle" parent="android:TextAppearance.DeviceDefault.DialogWindowTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/AppAccentColorDark</item>
+    </style>
+
     <style name="DialogFieldLabel" parent="android:TextAppearance.Holo.Small">
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
