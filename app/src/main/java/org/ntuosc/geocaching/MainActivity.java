@@ -132,7 +132,7 @@ public class MainActivity
     public void onPostCheckin(Integer code) {
         switch (code) {
             case AppConfig.CODE_SUCCESS:
-                DialogFragment fragment = new CheckinFragment();
+                DialogFragment fragment = new CheckinDoneFragment();
                 fragment.show(getFragmentManager(), "checkin");
                 break;
             case AppConfig.CODE_ENDPOINT_INCORRECT:

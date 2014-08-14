@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.nfc.Tag;
 
-public class CheckinFragment extends DialogFragment {
+public class CheckinDoneFragment extends DialogFragment {
 
-    public CheckinFragment() {
+    public CheckinDoneFragment() {
         // Required empty public constructor
     }
 
