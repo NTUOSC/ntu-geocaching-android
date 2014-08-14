@@ -100,7 +100,7 @@ public class MainActivity
     protected void onNewIntent(Intent intent) {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (tag != null) {
-            // Tag discovered!
+            // Tag detected!
         }
 
         super.onNewIntent(intent);

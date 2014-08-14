@@ -2,16 +2,25 @@
 <resources>
 
     <string name="app_name">大地計劃</string>
+
     <string name="action_edit_endpoint">修改端點</string>
     <string name="action_about">關於</string>
+
     <string name="action_ok">確定</string>
     <string name="action_cancel">取消</string>
 
     <string name="prompt_scan_card">掃描學生證以繼續</string>
+    <string name="prompt_enable_nfc">請啟用裝置上的 NFC 功能</string>
 
     <string name="title_enter_endpoint">設定端點</string>
     <string name="prompt_enter_endpoint">連線資訊可向開源社取得。</string>
     <string name="hint_endpoint_name">名稱</string>
     <string name="hint_endpoint_key">驗證碼</string>
+
+    <string name="title_checkin_done">打卡成功！</string>
+    <string name="prompt_checkin_done">解開大地計劃的成就還能兌換獎品哦！如果希望留下聯絡資訊給這個社團，請選[留下資料]。</string>
+    <string name="hint_tag_id">卡片編號</string>
+    <string name="action_register">留下資料</string>
+    <string name="action_done">完成</string>
 
 </resources>
