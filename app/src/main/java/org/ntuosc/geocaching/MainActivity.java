@@ -5,7 +5,6 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
