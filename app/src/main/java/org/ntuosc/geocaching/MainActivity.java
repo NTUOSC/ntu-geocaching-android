@@ -39,9 +39,6 @@ public class MainActivity
             fragment.setArguments(bundle);
             fragment.show(getFragmentManager(), ENDPOINT_CONFIG);
         }
-
-        // Start detecting tag
-        enableNfcDispatch();
     }
 
     @Override

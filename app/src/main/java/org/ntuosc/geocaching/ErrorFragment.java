@@ -43,6 +43,7 @@ public class ErrorFragment extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         loadArguments(getArguments());
     }
 

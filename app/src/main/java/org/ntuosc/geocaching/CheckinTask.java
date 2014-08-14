@@ -98,6 +98,7 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
             }
             catch (IOException ex) {
                 Log.e(PACKAGE_NAME, "Error occurred while building up connection", ex);
+                ex.printStackTrace();
 
                 if (request != null) {
                     try {
@@ -121,6 +122,7 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
                     }
                     catch (Exception inner) {
                         Log.e(PACKAGE_NAME, "Failed to parse error response", inner);
+                        inner.printStackTrace();
                     }
                 }
 
