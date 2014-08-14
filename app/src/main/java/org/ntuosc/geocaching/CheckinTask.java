@@ -78,9 +78,10 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
             }
 
             // Send request
+            HttpsURLConnection request = null;
 
             try {
-                HttpsURLConnection request = (HttpsURLConnection) url.openConnection();
+                request = (HttpsURLConnection) url.openConnection();
 
                 request.setUseCaches(false);
                 request.setRequestMethod("POST");
@@ -96,49 +97,49 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
                 writer.close();
                 output.close();
 
-                try {
-                    String response = Util.readToEnd(request.getInputStream());
+                String response = Util.readToEnd(request.getInputStream());
 
-                    // Theoretically need to parse JSON but gonna ignore the result here
-                    // since we're not distinguishing "ok" and "notice: came before"
-                    // JSONObject entity = new JSONObject(entity);
-                }
-                catch (IOException ex) {
-                    Log.e(PACKAGE_NAME, String.format(Locale.getDefault(),
-                            "Server responded with HTTP Error %d", request.getResponseCode()), ex);
+                // Theoretically need to parse JSON but gonna ignore the result here
+                // since we're not distinguishing "ok" and "notice: came before"
+                // JSONObject entity = new JSONObject(entity);
+
+                Log.v(PACKAGE_NAME, "Checkin success!");
+
+            }
+            catch (IOException ex) {
+                Log.e(PACKAGE_NAME, "Error occurred while building up connection", ex);
+
+                if (request != null) {
                     try {
-                        String errorResponse = Util.readToEnd(request.getErrorStream());
-                        JSONObject entity = new JSONObject(errorResponse);
+                        // Read HTTP Error Code
+                        Log.v(PACKAGE_NAME, String.format(Locale.getDefault(),
+                                "HTTP %d: %s",
+                                request.getResponseCode(), request.getResponseMessage()));
+
+                        // Try parse and read server response
+                        String response = Util.readToEnd(request.getErrorStream());
+                        JSONObject entity = new JSONObject(response);
 
                         Log.v(PACKAGE_NAME, String.format(Locale.getDefault(),
                                 "Error message: %s", entity.getString("message")));
 
+                        // Return appropriate result code
                         if (request.getResponseCode() == HTTP_BAD_REQUEST)
                             return CODE_ENDPOINT_INCORRECT;
                         else if (request.getResponseCode() == HTTP_INTERNAL_ERROR)
                             return CODE_GENERIC_ERROR;
-                        else
-                            return CODE_NETWORK_ERROR;
-
                     }
-                    catch (JSONException inner) {
-                        if (request.getResponseCode() == HTTP_INTERNAL_ERROR)
-                            return CODE_GENERIC_ERROR;
-                        else
-                            return CODE_NETWORK_ERROR;
-                    }
-                    catch (IOException inner) {
+                    catch (Exception inner) {
                         Log.e(PACKAGE_NAME, "Failed to parse error response", inner);
-                        return CODE_NETWORK_ERROR;
                     }
                 }
-                finally {
-                    request.disconnect();
-                }
-            }
-            catch (IOException ex) {
-                Log.e(PACKAGE_NAME, "Error occurred while requesting checkin", ex);
+
+                // Huston, we've got a problem
                 return CODE_NETWORK_ERROR;
+            }
+            finally {
+                if (request != null)
+                    request.disconnect();
             }
         }
 
