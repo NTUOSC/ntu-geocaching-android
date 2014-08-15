@@ -57,7 +57,6 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
             params.put("cuid", uid);
 
             // Build up URL
-
             URL url;
 
             try {
@@ -78,6 +77,7 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
                 request.setDoInput(true);
                 request.setDoOutput(true);
                 request.setRequestMethod("POST");
+                request.setRequestProperty("X-Geocaching-Client", "NTUOSC");
                 request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 request.setChunkedStreamingMode(0);
 
@@ -129,10 +129,6 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
 
                 // Huston, we've got a problem
                 return CODE_NETWORK_ERROR;
-            }
-            finally {
-                if (request != null)
-                    request.disconnect();
             }
         }
 
