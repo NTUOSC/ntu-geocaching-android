@@ -9,7 +9,6 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -79,7 +78,6 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
                 request.setRequestMethod("POST");
                 request.setRequestProperty("X-Geocaching-Client", "NTUOSC");
                 request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                request.setChunkedStreamingMode(0);
 
                 OutputStream output = request.getOutputStream();
                 Writer writer = new BufferedWriter(new OutputStreamWriter(output, DEFAULT_ENCODING));
