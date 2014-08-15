@@ -24,7 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/prompt_scan_card"
+            android:id="@+id/prompt_text"
+            android:text="@string/prompt_waiting_device"
             style="@style/PromptText"/>
 
     </LinearLayout>

@@ -12,6 +12,7 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -114,17 +115,35 @@ public class MainActivity
     }
 
     public void enableNfcDispatch() {
+        updatePrompt(null);
         NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
 
-        PendingIntent nfcIntent = PendingIntent.getActivity(this, AppConfig.CODE_NFC_REQUEST,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        if (nfc != null && nfc.isEnabled()) {
+            PendingIntent nfcIntent = PendingIntent.getActivity(this, AppConfig.CODE_NFC_REQUEST,
+                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
-        nfc.enableForegroundDispatch(this, nfcIntent, null, null);
+            nfc.enableForegroundDispatch(this, nfcIntent, null, null);
+            updatePrompt(true);
+
+        } else {
+            updatePrompt(false);
+        }
     }
 
     public void disableNfcDispatch() {
         NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
-        nfc.disableForegroundDispatch(this);
+        if (nfc != null && nfc.isEnabled()) {
+            nfc.disableForegroundDispatch(this);
+        }
+    }
+
+    public void updatePrompt(Boolean status) {
+        TextView promptText = (TextView) findViewById(R.id.prompt_text);
+        promptText.setText(
+                status == null ? R.string.prompt_waiting_device :
+                        status ? R.string.prompt_scan_card :
+                                 R.string.prompt_enable_nfc
+        );
     }
 
     public void onPostCheckin(Integer code) {
