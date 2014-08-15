@@ -28,6 +28,16 @@
             android:text="@string/prompt_waiting_device"
             style="@style/PromptText"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dialog_field_margin"
+            android:id="@+id/button_configure_nfc"
+            android:text="@string/action_configure_nfc"
+            android:onClick="onOpenSettingsButtonClicked"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package org.ntuosc.geocaching;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
@@ -9,9 +10,13 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -138,12 +143,33 @@ public class MainActivity
     }
 
     public void updatePrompt(Boolean status) {
+        // Update prompt text
         TextView promptText = (TextView) findViewById(R.id.prompt_text);
         promptText.setText(
                 status == null ? R.string.prompt_waiting_device :
                         status ? R.string.prompt_scan_card :
                                  R.string.prompt_enable_nfc
         );
+
+        // Set up buttons
+        ((Button) findViewById(R.id.button_configure_nfc))
+                .setVisibility((status == null || status) ? View.GONE : View.VISIBLE);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void onOpenSettingsButtonClicked(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            try {
+                startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+                return;
+            }
+            catch (ActivityNotFoundException ex) {
+                // Alright, use fallback
+            }
+        }
+
+        // Open Settings app instead in lower API levels
+        startActivity(new Intent(Settings.ACTION_SETTINGS));
     }
 
     public void onPostCheckin(Integer code) {
