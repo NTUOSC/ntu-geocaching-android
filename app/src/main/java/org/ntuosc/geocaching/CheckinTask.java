@@ -75,10 +75,10 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
                 request = (HttpsURLConnection) url.openConnection();
 
                 request.setUseCaches(false);
-                request.setRequestMethod("POST");
-                request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 request.setDoInput(true);
                 request.setDoOutput(true);
+                request.setRequestMethod("POST");
+                request.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 request.setChunkedStreamingMode(0);
 
                 OutputStream output = request.getOutputStream();
@@ -107,10 +107,6 @@ public class CheckinTask extends AsyncTask<Tag, Integer, Integer> {
                         Log.v(PACKAGE_NAME, String.format(Locale.getDefault(),
                                 "HTTP %d: %s",
                                 request.getResponseCode(), request.getResponseMessage()));
-
-                        // Handle special cases
-                        if (ex instanceof FileNotFoundException)
-                            return CODE_ENDPOINT_INCORRECT;
 
                         // Try parse and read server response
                         String response = Util.readToEnd(request.getErrorStream());
