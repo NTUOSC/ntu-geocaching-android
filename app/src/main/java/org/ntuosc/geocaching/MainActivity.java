@@ -172,10 +172,10 @@ public class MainActivity
         startActivity(new Intent(Settings.ACTION_SETTINGS));
     }
 
-    public void onPostCheckin(Integer code) {
+    public void onPostCheckin(CheckinTask.Result result) {
         DialogFragment fragment;
 
-        switch (code) {
+        switch (result.code) {
             case AppConfig.CODE_SUCCESS:
                 fragment = new CheckinDoneFragment();
                 fragment.show(getFragmentManager(), "checkin");
