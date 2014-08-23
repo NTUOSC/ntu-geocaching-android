@@ -132,6 +132,7 @@ public class CheckinTask extends AsyncTask<Tag, Integer, CheckinTask.Result> {
             result.checkin_count = entity.getInt("count");
             result.registered = (entity.getInt("is_registered") > 0);
             result.redeemable = (entity.getInt("can_redeem") > 0);
+            result.tagId = uid;
 
             Log.v(PACKAGE_NAME, "Checkin success!");
             return result;
@@ -161,12 +162,14 @@ public class CheckinTask extends AsyncTask<Tag, Integer, CheckinTask.Result> {
         public Integer checkin_count;
         public boolean registered;
         public boolean redeemable;
+        public String tagId;
 
         protected Result(Integer code) {
             this.code = code;
             checkin_count = 0;
             registered = false;
             redeemable = false;
+            tagId = null;
         }
     }
 }

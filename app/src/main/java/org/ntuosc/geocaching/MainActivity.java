@@ -177,10 +177,16 @@ public class MainActivity
 
         switch (result.code) {
             case AppConfig.CODE_SUCCESS:
-                fragment = CheckinDoneFragment.newInstance(
-                        result.checkin_count,
-                        result.redeemable && !result.registered);
-                fragment.show(getFragmentManager(), "checkin");
+                if (result.redeemable && result.registered) {
+                    fragment = RedeemFragment.newInstance(result.tagId);
+                    fragment.show(getFragmentManager(), "redeem");
+                }
+                else {
+                    fragment = CheckinDoneFragment.newInstance(
+                            result.checkin_count,
+                            result.redeemable);
+                    fragment.show(getFragmentManager(), "checkin");
+                }
                 break;
 
             case AppConfig.CODE_ENDPOINT_INCORRECT:

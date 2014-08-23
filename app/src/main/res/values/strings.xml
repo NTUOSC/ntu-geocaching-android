@@ -26,6 +26,12 @@
     <string name="prompt_checkin_done_redeemable">恭喜集滿 %d 個打卡點！請至開源社填寫資料，就能兌換獎品囉。(￣▽￣)</string>
     <string name="action_done">完成</string>
 
+    <string name="title_query_redeem">兌換獎品？</string>
+    <string name="prompt_query_redeem">確定要在這個攤位兌換獎品嗎？</string>
+
+    <string name="title_redeem_done">兌換完成</string>
+    <string name="prompt_redeem_done">恭喜解開大地計劃成就，祝你有個愉快的一天！（´ω`*）</string>
+
     <string name="title_endpoint_incorrect">端點設定不正確</string>
     <string name="prompt_endpoint_incorrect">可能是打錯字了？我們需要檢查一下之前輸入的連線資訊。</string>
     <string name="action_continue">繼續</string>
