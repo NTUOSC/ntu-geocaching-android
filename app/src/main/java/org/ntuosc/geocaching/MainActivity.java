@@ -13,6 +13,7 @@ import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -175,20 +176,59 @@ public class MainActivity
     public void onPostCheckin(CheckinTask.Result result) {
         DialogFragment fragment;
 
-        switch (result.code) {
-            case AppConfig.CODE_SUCCESS:
-                if (result.redeemable && result.registered) {
-                    fragment = RedeemFragment.newInstance(result.tagId);
-                    fragment.show(getFragmentManager(), "redeem");
-                }
-                else {
-                    fragment = CheckinDoneFragment.newInstance(
-                            result.checkin_count,
-                            result.redeemable);
-                    fragment.show(getFragmentManager(), "checkin");
-                }
-                break;
+        if (result.code == AppConfig.CODE_SUCCESS) {
+            if (result.redeemable && result.registered) {
+                fragment = RedeemFragment.newInstance(result.tagId);
+                fragment.show(getFragmentManager(), "redeem");
+            }
+            else {
+                fragment = CheckinDoneFragment.newInstance(
+                        result.checkin_count,
+                        result.redeemable);
+                fragment.show(getFragmentManager(), "checkin");
+            }
+        }
+        else {
+            showErrorDialog(result.code);
+        }
+    }
 
+    public void onPreRedeem(String tagId) {
+        RedeemTask task = new RedeemTask(this);
+        task.execute(tagId);
+    }
+
+    public void onPostRedeem(Integer code) {
+        DialogFragment fragment;
+
+        if (code == AppConfig.CODE_SUCCESS) {
+            // Show redeem OK
+            fragment = ErrorFragment.newInstance(
+                    getString(R.string.title_redeem_done),
+                    getString(R.string.prompt_redeem_done),
+                    getString(R.string.action_ok),
+                    AppConfig.CODE_NOT_REGISTERED_YET
+            );
+            fragment.show(getFragmentManager(), "redeemed");
+        }
+        else if (code == AppConfig.CODE_NOT_REGISTERED_YET) {
+            fragment = ErrorFragment.newInstance(
+                    getString(R.string.title_not_registered_yet),
+                    getString(R.string.prompt_not_registered_yet),
+                    getString(R.string.action_ok),
+                    AppConfig.CODE_NOT_REGISTERED_YET
+            );
+            fragment.show(getFragmentManager(), "error");
+        }
+        else {
+            showErrorDialog(code);
+        }
+    }
+
+    public void showErrorDialog(Integer code) {
+        DialogFragment fragment;
+
+        switch (code) {
             case AppConfig.CODE_ENDPOINT_INCORRECT:
                 fragment = ErrorFragment.newInstance(
                         getString(R.string.title_endpoint_incorrect),
@@ -196,7 +236,6 @@ public class MainActivity
                         getString(R.string.action_continue),
                         AppConfig.CODE_ENDPOINT_INCORRECT
                 );
-                fragment.show(getFragmentManager(), "error");
                 break;
 
             case AppConfig.CODE_NETWORK_ERROR:
@@ -205,7 +244,6 @@ public class MainActivity
                         getString(R.string.prompt_network_error),
                         getString(R.string.action_ok),
                         0);
-                fragment.show(getFragmentManager(), "error");
                 break;
 
             case AppConfig.CODE_GENERIC_ERROR:
@@ -214,9 +252,14 @@ public class MainActivity
                         getString(R.string.prompt_generic_error),
                         getString(R.string.action_ok),
                         0);
-                fragment.show(getFragmentManager(), "error");
                 break;
+
+            default:
+                Log.w(AppConfig.PACKAGE_NAME, "Unknown error code");
+                return;
         }
+
+        fragment.show(getFragmentManager(), "error");
     }
 
     @Override

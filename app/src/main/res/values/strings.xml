@@ -32,6 +32,9 @@
     <string name="title_redeem_done">兌換完成</string>
     <string name="prompt_redeem_done">恭喜解開大地計劃成就，祝你有個愉快的一天！（´ω`*）</string>
 
+    <string name="title_not_registered_yet">尚未填寫資料</string>
+    <string name="prompt_not_registered_yet">哦？看來你忘記到開源社攤位填寫資料了？請前往登記吧。</string>
+
     <string name="title_endpoint_incorrect">端點設定不正確</string>
     <string name="prompt_endpoint_incorrect">可能是打錯字了？我們需要檢查一下之前輸入的連線資訊。</string>
     <string name="action_continue">繼續</string>

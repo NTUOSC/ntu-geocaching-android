@@ -59,6 +59,6 @@ public class RedeemFragment extends DialogFragment {
     }
 
     public void onDialogAccepted(DialogInterface dialog) {
-        //
+        ((MainActivity) getActivity()).onPreRedeem(mTagId);
     }
 }

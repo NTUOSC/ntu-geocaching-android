@@ -18,9 +18,13 @@ public final class AppConfig {
 
     public static final String URL_ENDPOINT = "https://ntu-geocaching.herokuapp.com/endpoint/%s";
 
+    public static final String URL_REDEEM = "https://ntu-geocaching.herokuapp.com/redeem";
+
     public static final int CODE_SUCCESS = 0;
 
     public static final int CODE_ENDPOINT_INCORRECT = 400;
+
+    public static final int CODE_NOT_REGISTERED_YET = 402;
 
     public static final int CODE_GENERIC_ERROR = 500;
 
