@@ -24,6 +24,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/checkin_prompt_text"
         android:text="@string/prompt_checkin_done"
         style="@style/DialogPrompt" />
 

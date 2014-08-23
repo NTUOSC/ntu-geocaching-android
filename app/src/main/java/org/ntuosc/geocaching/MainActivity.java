@@ -177,7 +177,9 @@ public class MainActivity
 
         switch (result.code) {
             case AppConfig.CODE_SUCCESS:
-                fragment = new CheckinDoneFragment();
+                fragment = CheckinDoneFragment.newInstance(
+                        result.checkin_count,
+                        result.redeemable && !result.registered);
                 fragment.show(getFragmentManager(), "checkin");
                 break;
 
