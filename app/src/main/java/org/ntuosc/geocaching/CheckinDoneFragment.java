@@ -59,7 +59,7 @@ public class CheckinDoneFragment extends DialogFragment {
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-
+                onShowDialog(dialogInterface);
             }
         });
 
